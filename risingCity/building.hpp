@@ -2,7 +2,7 @@
 #define BUILDING_HPP_
 
 struct building{
-    int buildingNUm;
+    int buildingNum;
     int executedTime;
     int totalTime;
 };

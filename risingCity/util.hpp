@@ -1,6 +1,7 @@
 #include "building.hpp"
 #include <fstream>
 void readCommand(string command, string *arguments);
-void Insert(int buildingNum, int totalTime);
-void PrintBuilding(int buildingNum);
-void PrintBuilding(int buildingNum1, int buildingNum2);
+bool constructBuild();
+void insertBuilding(minHeap *heapCity, redBlackTree *rbtCity, int buildingNum, int totalTime);
+void printBuilding(int buildingNum);
+void printBuilding(int buildingNum1, int buildingNum2);

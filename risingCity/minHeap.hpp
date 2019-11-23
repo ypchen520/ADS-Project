@@ -6,11 +6,11 @@
 class minHeap{
     int heapCapacity;
     int heapSize;
-    int *heapArr;
+    building *heapArr;
   public:
     minHeap(int capacity);
     void minHeapify(int i);
-    void insertKey(int key);
+    void insertKey(building key);
     void decreaseKey(int i, int newVal);
     int extractMin();
     void deleteKey(int i);
