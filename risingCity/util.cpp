@@ -28,8 +28,8 @@ void insertBuilding(minHeap *heapCity, redBlackTree *rbtCity, int buildingNum, i
     newBuilding.buildingNum = buildingNum;
     newBuilding.executedTime = 0;
     newBuilding.totalTime = totalTime;
-    heapCity.insert(newBuilding);
-    rbtCity.insert(newBuilding);
+    heapCity->insertKey(newBuilding);
+    //rbtCity.insert(newBuilding);
 }
 /*
 void printBuilding(int buildingNum);

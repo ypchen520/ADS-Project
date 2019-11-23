@@ -24,11 +24,12 @@ int main(int argc, char *argv[]){
                 if(stoi(arguments[0]) == globalTime){
                     if(arguments[1][0] == 'I'){
                         cout << arguments[1] <<endl;
-                        insertBuilding(heapCity, rbtCity)
+                        insertBuilding(heapCity, rbtCity, stoi(arguments[2]), stoi(arguments[3]));
                     }
                     else if(arguments[1][0] == 'P'){
                         cout << arguments[1] <<endl;
                     }
+                    cout << heapCity->getMin().buildingNum << endl;
                 }
             }
             // cout << arguments[0] <<endl;
