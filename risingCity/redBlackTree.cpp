@@ -1,12 +1,12 @@
 #include "redBlackTree.hpp"
 #include <iostream>
 
-node* redBlackTree::treeSearch(int pair){
+node* redBlackTree::treeSearch(int buildingNum){
     node *temp = getRoot();
     while(temp){
-        if(pair == temp->data)
+        if(buildingNum == temp->data.buildingNum)
             return temp;
-        else if(pair < temp->data)
+        else if(buildingNum < temp->data.buildingNum)
             temp = temp->leftChild;
         else
             temp = temp->rightChild;
@@ -14,7 +14,7 @@ node* redBlackTree::treeSearch(int pair){
     return nullptr;
 }
 
-void redBlackTree::insert(int pair){
+void redBlackTree::insert(building pair){
     if(root == nullptr){
         root = new node();
         root->data = pair;
@@ -28,7 +28,7 @@ void redBlackTree::insert(int pair){
         node *temp = getRoot();
         
         while(temp != nullptr){
-            if(pair < temp->data){
+            if(pair.buildingNum < temp->data.buildingNum){
                 if(temp->leftChild == nullptr){
                     temp->leftChild = newNode;
                     newNode->parent = temp;
@@ -62,7 +62,7 @@ void redBlackTree::insertBalance(node *p){
                 pp->color = "BLACK";
                 gp->rightChild->color = "BLACK";
                 gp->color = "RED";
-                if(gp->data != root->data)
+                if(gp->data.buildingNum != root->data.buildingNum)
                     p = gp;
                 else
                     break;
@@ -73,7 +73,7 @@ void redBlackTree::insertBalance(node *p){
                 pp->color = "RED";
                 gp->color = "BLACK";
                 rightRotate(gp);
-                if(gp->data != root->data)
+                if(gp->data.buildingNum != root->data.buildingNum)
                     p = gp;
                 else
                     break;
@@ -85,7 +85,7 @@ void redBlackTree::insertBalance(node *p){
                 pp->color = "BLACK";
                 gp->leftChild->color = "BLACK";
                 gp->color = "RED";
-                if(gp->data != root->data)
+                if(gp->data.buildingNum != root->data.buildingNum)
                     p = gp;
                 else
                     break;
@@ -96,7 +96,7 @@ void redBlackTree::insertBalance(node *p){
                 pp->color = "RED";
                 gp->color = "BLACK";
                 leftRotate(gp);
-                if(gp->data != root->data)
+                if(gp->data.buildingNum != root->data.buildingNum)
                     p = gp;
                 else
                     break;
@@ -106,12 +106,12 @@ void redBlackTree::insertBalance(node *p){
     root->color="BLACK";
 }
 
-void redBlackTree::deleteNode(node *py, node *y, int pair){
+void redBlackTree::deleteNode(node *py, node *y, int buildingNum){
     if(y == nullptr)
         return;
-    if(y->data == pair){
+    if(y->data.buildingNum == buildingNum){
         if(y->leftChild == nullptr && y->rightChild == nullptr){
-            if(y->data == py->data)
+            if(buildingNum == py->data.buildingNum)
                 root = nullptr;
             else if(y == py->rightChild){
                 removeBalance(y);
@@ -123,16 +123,18 @@ void redBlackTree::deleteNode(node *py, node *y, int pair){
             }
         }
         else if(y->leftChild != nullptr && y->rightChild == nullptr){
-            int temp = y->data;
+            //int temp = y->data;
+            building tempBuilding = y->data;
             y->data = y->leftChild->data;
-            y->leftChild->data = temp;
-            deleteNode(y, y->leftChild, pair);
+            y->leftChild->data = tempBuilding;
+            deleteNode(y, y->leftChild, buildingNum);
         }
         else if(y->leftChild == nullptr && y->rightChild != nullptr){
-            int tempPair = y->data;
+            //int tempPair = y->data;
+            building tempBuilding = y->data;
             y->data = y->rightChild->data;
-            y->rightChild->data = tempPair;
-            deleteNode(y, y->rightChild, pair);
+            y->rightChild->data = tempBuilding;
+            deleteNode(y, y->rightChild, buildingNum);
         }
         else{
             node* temp = y->rightChild;
@@ -145,24 +147,25 @@ void redBlackTree::deleteNode(node *py, node *y, int pair){
             }
             if(flag == false)
                 py = y;
-            int tempPair = y->data;
+            //int tempPair = y->data;
+            building tempBuilding = y->data;
             y->data = temp->data;
-            temp->data = tempPair;
-            deleteNode(py, temp, tempPair);
+            temp->data = tempBuilding;
+            deleteNode(py, temp, buildingNum);
         }
     }
 }
-void redBlackTree::remove(int pair){
+void redBlackTree::remove(int buildingNum){
     node *temp = root;
     node *py = temp;
     bool flag = false;
     while(temp){
-        if(pair == temp->data){
-            deleteNode(py, temp, pair);
+        if(buildingNum == temp->data.buildingNum){
+            deleteNode(py, temp, buildingNum);
             flag = true;
             break;
         }
-        else if(pair < temp->data){
+        else if(buildingNum < temp->data.buildingNum){
             py = temp;
             temp = temp->leftChild;
         }
@@ -175,7 +178,7 @@ void redBlackTree::remove(int pair){
         cout << "No building matched\n";
 }
 void redBlackTree::removeBalance(node *y){
-    while(y->color == "BLACK" && y->data != root->data){
+    while(y->color == "BLACK" && y->data.buildingNum != root->data.buildingNum){
         node *py = y->parent;
         if(y == py->leftChild){
             node* sibling = py->rightChild;

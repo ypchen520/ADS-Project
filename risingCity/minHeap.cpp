@@ -1,5 +1,7 @@
 #include "minHeap.hpp"
 
+//Handle tie break!!
+
 void exchange(building *a, building *b){
     building temp = *a;
     *a = *b;

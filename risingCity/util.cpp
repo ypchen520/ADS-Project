@@ -19,8 +19,27 @@ void readCommand(string command, string *arguments){
         arguments[2] = getSubstr(command, "(", ")");
     }
 }
-bool constructBuild(){
+building selectBuilding(minHeap *heapCity, building *selectedBuilding){
+    //get the building with lowest executedTime
+    *selectedBuilding = heapCity.extractMin();
+    return selectedBuilding;
+}
+bool constructBuilding(minHeap *heapCity, redBlackTree *rbtCity, building *selectedBuilding, int *constructingTime, int globalTime){
     bool workingOnBuilding = true;
+    int bn = selectedBuilding->buildingNum;
+    int tt = selectedBuilding->totalTime;
+    rbt.treeSearch(bn)->data.executedTime++;
+    *selectedBuilding.executedTime++;
+    globalTime++;
+    *constructingTime++;
+    if(selectedBuilding.executedTime == tt){
+        cout << "Building Number: " << bn << "; Day of completion: " << globalTime <<endl;
+        rbtCity.remove(bn);
+    } 
+    else if(constructingTime == 5){
+        heapCity.insertKey()
+    }
+    
     return workingOnBuilding;
 }
 void insertBuilding(minHeap *heapCity, redBlackTree *rbtCity, int buildingNum, int totalTime){
@@ -29,7 +48,7 @@ void insertBuilding(minHeap *heapCity, redBlackTree *rbtCity, int buildingNum, i
     newBuilding.executedTime = 0;
     newBuilding.totalTime = totalTime;
     heapCity->insertKey(newBuilding);
-    //rbtCity.insert(newBuilding);
+    rbtCity->insert(newBuilding);
 }
 /*
 void printBuilding(int buildingNum);

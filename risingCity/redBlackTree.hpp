@@ -6,7 +6,8 @@
 using namespace std;
 
 struct node{
-    int data;
+    //int data;
+    building data;
     string color;
     node *leftChild;
     node *rightChild;
@@ -18,11 +19,14 @@ class redBlackTree{
   public:
     redBlackTree() : root(nullptr) {}
     node* getRoot(){return root;}
-    node* treeSearch(int pair);
-    void insert(int pair);
+    node* treeSearch(int buildingNum);
+    //void insert(int pair);
+    void insert(building pair);
     void insertBalance(node *p);
-    void deleteNode(node *py, node *y, int pair);
-    void remove(int pair);
+    //void deleteNode(node *py, node *y, int pair);
+    void deleteNode(node *py, node *y, int buildingNum);
+    //void remove(int pair);
+    void remove(int buildingNum);
     void removeBalance(node *y);
     void leftRotate(node *p);
     void rightRotate(node *p);
