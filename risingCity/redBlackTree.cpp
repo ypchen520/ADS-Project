@@ -1,6 +1,7 @@
 #include "redBlackTree.hpp"
 #include <iostream>
 
+/*
 node* redBlackTree::treeSearch(int buildingNum){
     node *temp = getRoot();
     while(temp){
@@ -12,6 +13,29 @@ node* redBlackTree::treeSearch(int buildingNum){
             temp = temp->rightChild;
     }
     return nullptr;
+}
+
+node* redBlackTree::printingRootSearch(int bn1, int bn2){
+    node *temp = root;
+    int tempBuildingNum = temp->data.buildingNum;
+    while(temp != nullptr){
+        if(bn1 > tempBuildingNum){
+            if(temp->rightChild == nullptr)
+                return nullptr;
+            else
+                temp = temp->rightChild;
+        }
+        else if(bn1 <= tempBuildingNum && bn2 >= tempBuildingNum){
+            break;
+        }
+        else{
+            if(temp->leftChild == nullptr)
+                return nullptr;
+            else
+                temp = temp->leftChild;
+        }
+    }
+    return temp;
 }
 
 void redBlackTree::insert(building pair){
@@ -110,19 +134,25 @@ void redBlackTree::deleteNode(node *py, node *y, int buildingNum){
     if(y == nullptr)
         return;
     if(y->data.buildingNum == buildingNum){
+        cout << "removing: " << buildingNum << endl;
         if(y->leftChild == nullptr && y->rightChild == nullptr){
             if(buildingNum == py->data.buildingNum)
                 root = nullptr;
             else if(y == py->rightChild){
+                cout << "HERE??" <<endl;
                 removeBalance(y);
-                py->rightChild = nullptr;
+                cout << "removing py's right: " << py->rightChild->data.buildingNum <<endl;
+                cout << "py's right: " << py->rightChild->data.buildingNum <<endl;
+                //cout << "13320:" << treeSearch(13320)->data.buildingNum <<endl;
+                py->rightChild->rightChild = nullptr;
             }
             else{
                 removeBalance(y);
-                py->leftChild = nullptr;
+                py->leftChild->leftChild = nullptr;
             }
         }
         else if(y->leftChild != nullptr && y->rightChild == nullptr){
+            cout << "left:" << treeSearch(buildingNum)->leftChild->data.buildingNum <<endl;
             //int temp = y->data;
             building tempBuilding = y->data;
             y->data = y->leftChild->data;
@@ -130,6 +160,7 @@ void redBlackTree::deleteNode(node *py, node *y, int buildingNum){
             deleteNode(y, y->leftChild, buildingNum);
         }
         else if(y->leftChild == nullptr && y->rightChild != nullptr){
+            cout << "right:" << treeSearch(buildingNum)->rightChild->data.buildingNum <<endl;
             //int tempPair = y->data;
             building tempBuilding = y->data;
             y->data = y->rightChild->data;
@@ -137,6 +168,8 @@ void redBlackTree::deleteNode(node *py, node *y, int buildingNum){
             deleteNode(y, y->rightChild, buildingNum);
         }
         else{
+            // cout << "left:" << treeSearch(buildingNum)->leftChild->data.buildingNum <<endl;
+            // cout << "right:" << treeSearch(buildingNum)->rightChild->data.buildingNum <<endl;
             node* temp = y->rightChild;
             bool flag = false;
             //smallest in the right subtree
@@ -241,17 +274,23 @@ void redBlackTree::removeBalance(node *y){
                     sibling = y->parent->leftChild;
                 }
                 else{
+                    //cout << "13257:" << treeSearch(13257)->data.buildingNum <<endl;
                     //sibling->color = y->parent->color; //B->R
                     //y->parent->color = "BLACK"; //R->B
                     if(sibling->leftChild)
                         sibling->leftChild->color = "BLACK";
                     rightRotate(y->parent);
+                    //cout << "13257:" << treeSearch(13257)->data.buildingNum <<endl;
+                    cout << "py:" << y->parent->data.buildingNum <<endl;
+                    cout << "py's right:" << y->parent->rightChild->data.buildingNum <<endl;
+                    cout << "y:" << y->data.buildingNum <<endl;
                     y = root;
                 }
             }
         }
     }
     y->color = "BLACK";
+    //cout << "13257:" << treeSearch(13257)->data.buildingNum <<endl;
 }
 
 void redBlackTree::leftRotate(node *p){
@@ -299,3 +338,15 @@ void redBlackTree::rightRotate(node *p){
     else
         return;
 }
+
+void redBlackTree::updateTime(int buildingNum, int value){
+    //cout << "update time: " << value << endl;
+    //cout << "bn: " << buildingNum << endl;
+    node *selectedNode = treeSearch(buildingNum);
+    if(selectedNode == nullptr){
+        cout << "WHY??" <<endl;
+    }
+    selectedNode->data.executedTime += value;
+    //cout << "time updated" << selectedNode->data.executedTime << endl;
+};
+*/

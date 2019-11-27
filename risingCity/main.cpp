@@ -4,66 +4,80 @@
 #include "util.hpp"
 
 using namespace std;
-
+//use pointer for data structures
 int main(int argc, char *argv[]){
     int globalTime = 0;
+    bool buildingCity = true;
     bool workingOnBuilding = false;
     bool fileFlag = false;
     bool readFileLine = true;
     int commandTime = -1;
     int constructingTime = 0;
-    buidling selectedBuilding;
+    building selectedBuilding;
     minHeap *heapCity = new minHeap(2000);
     redBlackTree *rbtCity = new redBlackTree();
     string command;
-    string *arguments = new string[4];
+    //string *arguments = new string[4];
+    string arguments[] = {"-1", "-1", "-1", "-1"};
+    selectedBuilding.buildingNum = -1;
     ifstream inputFile(argv[1]);
-    if (inputFile.is_open())
+    ofstream outputFile("output_file.txt");
+    if (inputFile.is_open() && outputFile.is_open())
     {
         do{
-            if(readFileLine)
+            if(readFileLine){
                 fileFlag = getline(inputFile,command);
                 readCommand(command, arguments);
-                commandTime = stoi(arguments[0]);
+                //cout << command <<endl;
+                if(arguments[0] != ""){
+                    commandTime = stoi(arguments[0]);
+                    readFileLine = false;
+                }
+            }
             if(fileFlag){
-                cout << command <<endl;
                 //do command
                 //commandTime should not be smaller than globalTime
                 if(commandTime == globalTime){
+                    int arg2 = stoi(arguments[2]);
+                    int arg3 = stoi(arguments[3]);
                     if(arguments[1][0] == 'I'){
-                        cout << arguments[1] <<endl;
-                        insertBuilding(heapCity, rbtCity, stoi(arguments[2]), stoi(arguments[3]));
+                        building *rbtBuilding = new building;
+                        insertBuilding(heapCity, rbtCity, arg2, arg3, rbtBuilding);
                     }
                     else if(arguments[1][0] == 'P'){
-                        cout << arguments[3] <<endl;
-                        cout << arguments[1] <<endl;
+                        //Selected: bn
+                        if(arg3 == -1)
+                            printBuilding(arg2, rbtCity, constructingTime, &selectedBuilding, outputFile);
+                        else
+                            printBuilding(arg2, arg3, rbtCity, constructingTime, &selectedBuilding, outputFile);
                     }
-                    cout << "heap root: " << heapCity->getMin().buildingNum << endl;
-                    cout << "rbt root: " << rbtCity->treeSearch(stoi(arguments[2]))->data.buildingNum << endl;
-                    readFileCommand = true;
+                    readFileLine = true;
                 }
                 else if(commandTime > globalTime){
                     readFileLine = false;
                 }
-                else{
-                    cout << "constructing..." << endl;
+            }
+            if(workingOnBuilding && constructingTime < 5){
+                workingOnBuilding = constructBuilding(heapCity, rbtCity, &selectedBuilding, &constructingTime, globalTime, outputFile);
+            }
+            if(!workingOnBuilding)
+                constructingTime = 0;
+            if(!workingOnBuilding){
+                selectBuilding(heapCity, &selectedBuilding);
+                workingOnBuilding = true;
+                if(selectedBuilding.buildingNum == -1){
+                    buildingCity = false;
+                    break;
                 }
-                if(!workingOnBuilding || constructingTime == 5){
-                    selectBuilding(heapCity, &selectedBuilding);
-                    workingOnBuilding = true;
-                }
-                if(workingOnBuilding && contructingTime < 5)
-                    workingOnBuilding = constructBuilding(heapCity, rbtCity, selectedBuilding, &constructingTime, globalTime);
+                constructingTime = 0;
             }
             globalTime++;
-            // globalTime += 3;
-            // cout << globalTime << endl;
-            // cout << "workingOnBuilding: " << workingOnBuilding <<endl;
-        }while(workingOnBuilding == true || fileFlag);
+        }while(buildingCity == true || fileFlag);
         inputFile.close();
+        outputFile.close();
     }
     else cout << "Unable to open file"; 
-    delete [] arguments;
+    //delete [] arguments;
     delete heapCity;
     delete rbtCity;
     return 0;
