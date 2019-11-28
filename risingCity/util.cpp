@@ -24,17 +24,19 @@ void selectBuilding(minHeap *heapCity, building *selectedBuilding){
     *selectedBuilding = heapCity->extractMin();
     //return selectedBuilding;
 }
-bool constructBuilding(minHeap *heapCity, redBlackTree *rbtCity, building *selectedBuilding, int *constructingTime, int globalTime, ofstream& outputFile){
+bool constructBuilding(minHeap *heapCity, redBlackTree *rbtCity, building *selectedBuilding, int *constructingTime, int globalTime, ofstream& outputFile, bool *specialFlag){
     bool workingOnBuilding = false;
     //bool contructingFlag = true;
     int bn = selectedBuilding->buildingNum;
     int tt = selectedBuilding->totalTime;
     selectedBuilding->executedTime++;
-    //globalTime++;
+    globalTime++;
     *constructingTime += 1;
     if(selectedBuilding->executedTime == tt){
-        outputFile << "(" << bn << "," << globalTime << ")" << endl;        
-        rbtCity->rbtDelete(bn);
+        rbtCity->updateTime(bn, *constructingTime);
+        //outputFile << "(" << bn << "," << globalTime << ")" << endl;
+        *specialFlag = true;
+        //rbtCity->rbtDelete(bn);
         *constructingTime = 0;
     } 
     else if(*constructingTime == 5){
@@ -42,7 +44,7 @@ bool constructBuilding(minHeap *heapCity, redBlackTree *rbtCity, building *selec
         int time = *constructingTime;
         rbtCity->updateTime(bn, time);
         //rbtCity->treeSearch(bn)->data.executedTime += constructingTime;
-        //*constructingTime = 0;
+        *constructingTime = 0;
     }
     else
         workingOnBuilding = true;
@@ -69,7 +71,7 @@ void printInorder(node *printingRoot, int buildingNum1, int buildingNum2, int se
     int rootExecutedTime =  printingRoot->data->executedTime;
     int rootTotalTime=  printingRoot->data->totalTime;
     if(rootBuildingNum == selectedNum){
-            rootExecutedTime += constructingTime;
+        rootExecutedTime += constructingTime;
     }
     printInorder(printingRoot->left, buildingNum1, buildingNum2, selectedNum, constructingTime, outputFile, delimiterFlag);
     if(rootBuildingNum > buildingNum1 && rootBuildingNum < buildingNum2){

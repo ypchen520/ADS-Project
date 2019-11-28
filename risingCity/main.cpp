@@ -4,13 +4,13 @@
 #include "util.hpp"
 
 using namespace std;
-//use pointer for data structures
 int main(int argc, char *argv[]){
     int globalTime = 0;
     bool buildingCity = true;
     bool workingOnBuilding = false;
     bool fileFlag = false;
     bool readFileLine = true;
+    bool specialFlag = false;
     int commandTime = -1;
     int constructingTime = 0;
     building selectedBuilding;
@@ -28,7 +28,6 @@ int main(int argc, char *argv[]){
             if(readFileLine){
                 fileFlag = getline(inputFile,command);
                 readCommand(command, arguments);
-                //cout << command <<endl;
                 if(arguments[0] != ""){
                     commandTime = stoi(arguments[0]);
                     readFileLine = false;
@@ -41,6 +40,11 @@ int main(int argc, char *argv[]){
                     int arg2 = stoi(arguments[2]);
                     int arg3 = stoi(arguments[3]);
                     if(arguments[1][0] == 'I'){
+                        if(specialFlag){
+                            outputFile << "(" << selectedBuilding.buildingNum << "," << globalTime << ")" << endl;
+                            rbtCity->rbtDelete(selectedBuilding.buildingNum);
+                            specialFlag = false;
+                        }
                         building *rbtBuilding = new building;
                         insertBuilding(heapCity, rbtCity, arg2, arg3, rbtBuilding);
                     }
@@ -50,19 +54,31 @@ int main(int argc, char *argv[]){
                             printBuilding(arg2, rbtCity, constructingTime, &selectedBuilding, outputFile);
                         else
                             printBuilding(arg2, arg3, rbtCity, constructingTime, &selectedBuilding, outputFile);
+                        if(specialFlag){
+                            outputFile << "(" << selectedBuilding.buildingNum << "," << globalTime << ")" << endl;
+                            rbtCity->rbtDelete(selectedBuilding.buildingNum);
+                            specialFlag = false;
+                        }
                     }
                     readFileLine = true;
                 }
                 else if(commandTime > globalTime){
                     readFileLine = false;
+                    if(specialFlag){
+                        outputFile << "(" << selectedBuilding.buildingNum << "," << globalTime << ")" << endl;
+                        rbtCity->rbtDelete(selectedBuilding.buildingNum);
+                        specialFlag = false;
+                    }
+                    //cout << "readFileLine: " << readFileLine <<endl;
                 }
             }
-            if(workingOnBuilding && constructingTime < 5){
-                workingOnBuilding = constructBuilding(heapCity, rbtCity, &selectedBuilding, &constructingTime, globalTime, outputFile);
+            if(specialFlag){
+                outputFile << "(" << selectedBuilding.buildingNum << "," << globalTime << ")" << endl;
+                rbtCity->rbtDelete(selectedBuilding.buildingNum);
+                specialFlag = false;
             }
-            if(!workingOnBuilding)
-                constructingTime = 0;
             if(!workingOnBuilding){
+                //rbtCity->rbtDelete(selectedBuilding.buildingNum);
                 selectBuilding(heapCity, &selectedBuilding);
                 workingOnBuilding = true;
                 if(selectedBuilding.buildingNum == -1){
@@ -70,6 +86,12 @@ int main(int argc, char *argv[]){
                     break;
                 }
                 constructingTime = 0;
+            }
+            if(workingOnBuilding && constructingTime < 5){
+                workingOnBuilding = constructBuilding(heapCity, rbtCity, &selectedBuilding, &constructingTime, globalTime, outputFile, &specialFlag);
+                if(selectedBuilding.buildingNum == 40 && selectedBuilding.executedTime == 225){
+                    cout << specialFlag <<endl;
+                }
             }
             globalTime++;
         }while(buildingCity == true || fileFlag);
