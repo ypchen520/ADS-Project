@@ -3,8 +3,8 @@
 
 #include "building.hpp"
 #include <fstream>
-void readCommand(string command, string *arguments);
-void selectBuilding(minHeap *heapCity, building *selectedBuilding);
+void readCommand(string command, string *arguments); //parser
+void selectBuilding(minHeap *heapCity, building *selectedBuilding); 
 bool constructBuilding(minHeap *heapCity, redBlackTree *rbtCity, building *selectedBuilding, int *constructingTime, int globalTime, ofstream& outputFile, bool *specialFlag);
 void insertBuilding(minHeap *heapCity, redBlackTree *rbtCity, int buildingNum, int totalTime, building* rbtBuilding);
 void printInorder(node *printingRoot, int buildingNum1, int buildingNum2, int selectedNum, int constructingTime, ofstream& outputFile, bool *delimiterFlag);

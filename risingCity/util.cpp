@@ -9,6 +9,8 @@ string getSubstr(string origin, string delimiter1, string delimiter2){
     return origin.substr(origin.find(delimiter1)+1, calSubstrLen(origin, delimiter1, delimiter2));
 }
 void readCommand(string command, string *arguments){
+    //parser
+    //utilizes getSubstr() and find(): calculate the substring length using index number of the delimiters
     arguments[0] = getSubstr(command, ":-]", ":");
     arguments[1] = getSubstr(command, " ", "(");
     if(command.find(",") != string::npos){
@@ -22,11 +24,9 @@ void readCommand(string command, string *arguments){
 void selectBuilding(minHeap *heapCity, building *selectedBuilding){
     //get the building with lowest executedTime
     *selectedBuilding = heapCity->extractMin();
-    //return selectedBuilding;
 }
 bool constructBuilding(minHeap *heapCity, redBlackTree *rbtCity, building *selectedBuilding, int *constructingTime, int globalTime, ofstream& outputFile, bool *specialFlag){
     bool workingOnBuilding = false;
-    //bool contructingFlag = true;
     int bn = selectedBuilding->buildingNum;
     int tt = selectedBuilding->totalTime;
     selectedBuilding->executedTime++;
@@ -34,7 +34,6 @@ bool constructBuilding(minHeap *heapCity, redBlackTree *rbtCity, building *selec
     *constructingTime += 1;
     if(selectedBuilding->executedTime == tt){
         rbtCity->updateTime(bn, *constructingTime);
-        //outputFile << "(" << bn << "," << globalTime << ")" << endl;
         *specialFlag = true;
         //rbtCity->rbtDelete(bn);
         *constructingTime = 0;
@@ -43,7 +42,6 @@ bool constructBuilding(minHeap *heapCity, redBlackTree *rbtCity, building *selec
         heapCity->insertKey(*selectedBuilding);
         int time = *constructingTime;
         rbtCity->updateTime(bn, time);
-        //rbtCity->treeSearch(bn)->data.executedTime += constructingTime;
         *constructingTime = 0;
     }
     else
@@ -70,6 +68,7 @@ void printInorder(node *printingRoot, int buildingNum1, int buildingNum2, int se
     int rootBuildingNum = printingRoot->data->buildingNum;
     int rootExecutedTime =  printingRoot->data->executedTime;
     int rootTotalTime=  printingRoot->data->totalTime;
+    //when printing the building that is still under construction
     if(rootBuildingNum == selectedNum){
         rootExecutedTime += constructingTime;
     }
@@ -96,6 +95,7 @@ void printBuilding(int buildingNum, redBlackTree *rbtCity, int constructingTime,
     if(printingNode != nullptr){
         int executedTime = printingNode->data->executedTime;
         int totalTime = printingNode->data->totalTime;
+        //when printing the building that is still under construction
         if(buildingNum == selectedBuilding->buildingNum)
             executedTime += constructingTime;
         outputFile << "(" << buildingNum << "," << executedTime << "," << totalTime << ")" << endl;
@@ -106,8 +106,9 @@ void printBuilding(int buildingNum, redBlackTree *rbtCity, int constructingTime,
 
 void printBuilding(int buildingNum1, int buildingNum2, redBlackTree *rbtCity, int constructingTime, building *selectedBuilding, ofstream& outputFile){
     int selectedNum = selectedBuilding->buildingNum;
+    //search for the root of the subtree that covers the range of [buildingNum1,buildingNum2]
     node *printingRoot = rbtCity->printingRootSearch(buildingNum1, buildingNum2);
-    bool delimiterFlag = false;
+    bool delimiterFlag = false; //handle the punctuation
     if(printingRoot != nullptr){
         printInorder(printingRoot, buildingNum1, buildingNum2, selectedNum, constructingTime, outputFile, &delimiterFlag);
         if(delimiterFlag)

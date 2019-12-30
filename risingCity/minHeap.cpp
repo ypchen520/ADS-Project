@@ -1,6 +1,6 @@
 #include "minHeap.hpp"
 
-void exchange(building *a, building *b){
+void swap(building *a, building *b){
     building temp = *a;
     *a = *b;
     *b = temp;
@@ -34,7 +34,7 @@ void minHeap::minHeapify(int i){
         }
     }
     if(minimum != i){
-        exchange(&heapArr[i], &heapArr[minimum]);
+        swap(&heapArr[i], &heapArr[minimum]);
         minHeapify(minimum);
     }
 }
@@ -47,52 +47,18 @@ void minHeap::insertKey(building key){
     heapSize++;
     int idx = heapSize-1;
     heapArr[idx] = key;
-    // while(heapArr[idx].executedTime < heapArr[parent(idx)].executedTime && idx != 0){
-    //     exchange(&heapArr[idx], &heapArr[parent(idx)]);
-    //     idx = parent(idx);
-    // }
+    //Handle the tie break
     while(heapArr[idx].executedTime <= heapArr[parent(idx)].executedTime && idx != 0){
-        // std::cout << "HERE?" <<std::endl;
-        // std::cout << "idx: " <<idx<<std::endl;
-        //         std::cout << "bn_ch: " << heapArr[idx].buildingNum << std::endl;
-        //         std::cout << "et_ch: " << heapArr[idx].executedTime << std::endl;
-        //         std::cout << "bn_parent: " << heapArr[parent(idx)].buildingNum << std::endl;
-        //         std::cout << "et_parent: " << heapArr[parent(idx)].executedTime << std::endl;
-        //         std::cout << "bn_gp: " << heapArr[parent(parent(idx))].buildingNum << std::endl;
-        //         std::cout << "et_gp: " << heapArr[parent(parent(idx))].executedTime << std::endl;
-        //         std::cout << "bn_9: " << heapArr[8].buildingNum << std::endl;
-        //         std::cout << "et_9: " << heapArr[8].executedTime << std::endl;
-        //         std::cout << "bn_ggp: " << heapArr[parent(parent(parent(idx)))].buildingNum << std::endl;
-        //         std::cout << "et_ggp: " << heapArr[parent(parent(parent(idx)))].executedTime << std::endl;
         if(heapArr[idx].executedTime < heapArr[parent(idx)].executedTime){
-            // if(heapArr[idx].buildingNum == 13257)
-            //     std::cout << "HERE??" <<std::endl;
-            // std::cout << "before case: <: " <<std::endl;
-            //     std::cout << "idx: " <<idx<<std::endl;
-            //     std::cout << "bn_ch: " << heapArr[idx].buildingNum << std::endl;
-            //     std::cout << "et_ch: " << heapArr[idx].executedTime << std::endl;
-            //     std::cout << "bn_parent: " << heapArr[parent(idx)].buildingNum << std::endl;
-            exchange(&heapArr[idx], &heapArr[parent(idx)]);
+            swap(&heapArr[idx], &heapArr[parent(idx)]);
             idx = parent(idx);
         }
         else if(heapArr[idx].executedTime == heapArr[parent(idx)].executedTime){
-            if(heapArr[idx].buildingNum < heapArr[parent(idx)].buildingNum){
-                // std::cout << "before: " <<std::endl;
-                // std::cout << "idx: " <<idx<<std::endl;
-                // std::cout << "bn_ch: " << heapArr[idx].buildingNum << std::endl;
-                // std::cout << "et_ch: " << heapArr[idx].executedTime << std::endl;
-                // std::cout << "bn_parent: " << heapArr[parent(idx)].buildingNum << std::endl;
-                exchange(&heapArr[idx], &heapArr[parent(idx)]);
+            if(heapArr[idx].buildingNum < heapArr[parent(idx)].buildingNum){            
+                swap(&heapArr[idx], &heapArr[parent(idx)]);
                 idx = parent(idx);
-                // std::cout << "after: " <<std::endl;
-                // std::cout << "idx: " <<idx<<std::endl;
-                // std::cout << "bn_ch: " << heapArr[idx].buildingNum << std::endl;
-                // std::cout << "et_ch: " << heapArr[idx].executedTime << std::endl;
-                // std::cout << "bn_parent: " << heapArr[parent(idx)].buildingNum << std::endl;
             }
             else{
-                // if(heapArr[idx].buildingNum == 13257)
-                //     std::cout << "HERE??" <<std::endl;
                 break;
             }
         }
@@ -101,14 +67,15 @@ void minHeap::insertKey(building key){
 
 void minHeap::decreaseKey(int i, int newVal){
     heapArr[i].executedTime = newVal;
+    //Handle the tie break
     while(heapArr[i].executedTime <= heapArr[parent(i)].executedTime && i != 0){
         if(heapArr[i].executedTime < heapArr[parent(i)].executedTime){
-            exchange(&heapArr[i], &heapArr[parent(i)]);
+            swap(&heapArr[i], &heapArr[parent(i)]);
             i = parent(i);
         }
         else if(heapArr[i].executedTime == heapArr[parent(i)].executedTime){
             if(heapArr[i].buildingNum < heapArr[parent(i)].buildingNum){
-                exchange(&heapArr[i], &heapArr[parent(i)]);
+                swap(&heapArr[i], &heapArr[parent(i)]);
                 i = parent(i);
             } 
             else
@@ -119,10 +86,11 @@ void minHeap::decreaseKey(int i, int newVal){
 
 building minHeap::extractMin(){
     if(heapSize <= 0){
+        //return null building with bn = -1 as a flag to signal the end of the program
         building nullBuilding;
         nullBuilding.buildingNum = -1;
-        nullBuilding.executedTime = INT_MIN;
-        nullBuilding.totalTime = INT_MAX;
+        nullBuilding.executedTime = INT32_MIN;
+        nullBuilding.totalTime = INT32_MAX;
         return nullBuilding;
     }
     if(heapSize == 1){
@@ -137,7 +105,7 @@ building minHeap::extractMin(){
 }
 
 void minHeap::deleteKey(int i){
-    decreaseKey(i, INT_MIN);
+    decreaseKey(i, INT32_MIN);
     extractMin();
 }
 

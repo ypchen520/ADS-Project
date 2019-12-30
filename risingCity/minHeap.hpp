@@ -14,7 +14,6 @@ class minHeap{
     void decreaseKey(int i, int newVal);
     building extractMin();
     void deleteKey(int i);
-    building getMin() {return heapArr[0];}
     int parent(int i) {return (i-1)/2;}
     int leftChild(int i) {return (2 * i + 1);}
     int rightChild(int i) {return (2 * i + 2);}
